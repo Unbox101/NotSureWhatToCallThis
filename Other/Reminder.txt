@@ -1,0 +1,5 @@
+
+- DON'T PINCH PENNIES! It's ok to not like some of nelua's syntax. I'll get used to it in time.
+
+- https://nelua.io/overview/#facultative-concept
+- https://nelua.io/overview/#overload-concept

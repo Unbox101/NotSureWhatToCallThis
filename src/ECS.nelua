@@ -1,0 +1,26 @@
+##[[
+
+
+
+local TOTAL_ARCHETYPES = 0
+local Archetypes = {
+
+}
+
+local _ToSig = function(compTable)
+	table.sort(compTable, function(a, b) return a:lower() < b:lower() end)
+	local sigOut = ""
+	for i,v in ipairs(compTable) do
+		sigOut = sigOut .. v
+	end
+	return sigOut
+end
+
+function RegisterArchetype(compTable)
+	local signature = _ToSig(compTable)
+	if not Archetypes[signature] then
+		TOTAL_ARCHETYPES = TOTAL_ARCHETYPES + 1
+		Archetypes[signature] = TOTAL_ARCHETYPES
+	end
+end
+]]

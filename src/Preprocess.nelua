@@ -1,0 +1,6 @@
+
+require "io"
+local file = io.open("src/TEST.nelua", "r")
+
+
+print("reer")

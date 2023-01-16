@@ -1,3 +1,3 @@
 @echo off
-lua %proj_path%\src\Main.lua
+nelua %proj_path%\src\Preprocess.nelua
 
