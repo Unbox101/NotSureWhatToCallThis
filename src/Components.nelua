@@ -1,10 +1,27 @@
-local Position = @record{
+global Position = @record{
 	x: float32,
 	y: float32,
 	z: float32,
 }
-local Size = @record{
+
+global Size = @record{
 	x: float32,
 	y: float32,
 	z: float32,
 }
+
+global Gravity = @record{
+	on: boolean
+}
+
+
+##[[--Auto get the sizes of all the structs in this file
+NameToI = {}
+SizeOfs = {}
+local CompCount = #Position.scope.children[3].children[1].node
+for i=1,CompCount do
+	--local comp = Position.scope.children[3].children[1].node[i]
+	StringToIndex[Position.scope.children[3].symbols[i].name] = i
+	SizeOfs[i] = Position.scope.children[3].symbols[i].value.size
+end
+]]
