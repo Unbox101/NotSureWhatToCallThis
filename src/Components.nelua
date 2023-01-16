@@ -1,0 +1,38 @@
+##[[
+float = "float32"
+local Components = {
+	Position = {
+		x = float,
+		y = float,
+		z = float
+	}
+}
+
+
+
+
+
+]]
+
+--[=[]]
+
+##local function GenerateComponents()
+	##for compName,compData in pairs(Components) do
+		local #|compName|# = @record{##[[for varName, varType in pairs(compData) do ]]#[varName]#: #[varType]#) ##[[end]] }
+		--}
+	##end
+##end
+
+]=]
+
+local Position = @record{
+	x: float32,
+	y: float32,
+	z: float32,
+}
+
+##[[
+print(#Position)
+print(#Position.value)
+]]
+print(#Position)
