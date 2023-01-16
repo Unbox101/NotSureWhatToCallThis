@@ -1,6 +1,16 @@
+##[[
+local readFile = io.open("src/Components.nelua")
 
-require "io"
-local file = io.open("src/TEST.nelua", "r")
+local writeFile = io.open("src/Gen_ComponentInfo.nelua", "w")
+writeFile:write("--THIS FILE IS GENERATED")
 
+local content = readFile:read("*all") readFile:close()
 
-print("reer")
+local AllComponentNames = {}
+
+--TODO Get all component names from Components.nelua
+--put those names in a list
+--
+
+writeFile:close()
+]]
