@@ -1,8 +1,11 @@
 ##pragmas.nogc = true
 ##cflags '-Ofast'
-## linklib 'glfw'
 
+require("src/Components")
 require "src/ECS"
+
+
+
 --[=[]]
 local fortnite = "amoddue"
 
@@ -13,5 +16,4 @@ local Position = @record{
 }
 ]=]
 
-require("src/Components")
 --local arch1: Position = {x = 1, y = 1, z = 1}
