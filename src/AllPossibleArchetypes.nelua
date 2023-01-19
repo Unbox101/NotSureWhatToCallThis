@@ -1,0 +1,32 @@
+--TODO: Write a preprocess that generates this file :(
+
+IMPORTANT ARCHETYPE MATH
+
+local ChunkSize = 32000
+
+local Position = 12
+local Size = 12
+local Gravity = 1
+
+local PosSizeGravity = {}
+PosSizeGravity.size = Position + Size + Gravity
+
+PosSizeGravity.entityCapacity = math.floor(ChunkSize / PosSizeGravity.size)
+
+--print(PosSizeGravity.entityCapacity)
+
+
+--[[
+
+---Current options for compile time---:
+Option 1: Write prestep that reads entire codebase for all uses of Query, Add, and Remove components and registers archetypes.
+Option 2: (Maybe) read through "someRecord".scope in its entirety and find all the uses of {Query, Add, Remove} and register archetypes.
+
+
+---current options for runtime---:
+
+Option 1: write classic bit array signature and each query do the bit or comparison. Maybe cache it.
+	This option registering archetypes on the fly.
+
+
+]]

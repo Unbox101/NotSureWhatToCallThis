@@ -1,26 +1,136 @@
 ##[[
 
+function NewSig(compTable)
+	local signature = {}
+	local ret = ""
+	for i=1,CompCount do
+		signature[i] = 0
+	end
+	
+	for _,compType in ipairs(compTable) do
+		signature[NameToI[compType.name] ] = 1
+	end
+	
+	for i,v in ipairs(signature) do
+		ret = ret..v
+	end
+	
+	return ret
+end
 
-
-local TOTAL_ARCHETYPES = 0
-local Archetypes = {
-
+_G.AllUses = {
+	Query = {},
+	Add = {},
+	Remove = {}
 }
 
-local _ToSig = function(compTable)
-	table.sort(compTable, function(a, b) return a:lower() < b:lower() end)
+TOTAL_ARCHETYPES = 0
+ArchetypeDictionary = {}
+ArchetypeComponents = {}
+
+_ToSig = function(compTable)
+	local dedupe = {}
+	local hash = {}
+	for _,v in ipairs(compTable) do
+		if not hash[v] then
+			dedupe[#dedupe+1] = v
+			hash[v] = true
+		end
+	end
+	table.sort(dedupe, function(a, b) return a:lower() < b:lower() end)
 	local sigOut = ""
-	for i,v in ipairs(compTable) do
-		sigOut = sigOut .. v
+	for i,v in ipairs(dedupe) do
+		sigOut = sigOut .."_".. v
 	end
 	return sigOut
 end
 
 function RegisterArchetype(compTable)
 	local signature = _ToSig(compTable)
-	if not Archetypes[signature] then
+	if not ArchetypeDictionary[signature] then
 		TOTAL_ARCHETYPES = TOTAL_ARCHETYPES + 1
-		Archetypes[signature] = TOTAL_ARCHETYPES
+		ArchetypeDictionary[signature] = TOTAL_ARCHETYPES
+		ArchetypeComponents[TOTAL_ARCHETYPES] = compTable
 	end
 end
+
+function AddComponents(entityIn, compTable)
+	--table.insert(AllUses.Add, compTable)
+end
+
+function RemoveComponents(entityIn, compTable)
+	--table.insert(AllUses.Remove, compTable)
+end
+
+function Query(compTable)
+	--table.insert(AllUses.Query, compTable)
+end
+
+
+
+
+
 ]]
+require "vector"
+require "src/Globals"
+
+global Entity = @record{
+	index: int,
+	version: int
+}
+
+global EntityInfo = @record{
+	archetype: short,
+	chunk: short,
+	index: short
+}
+
+global Entities: vector(Entity) = {}
+
+global function CreateEntity(): Entity
+	local newEntity: Entity = {
+		index = #Entities,
+		version = 0
+	}
+	Entities:push(newEntity)
+	return Entities[#Entities-1]
+end
+
+--pseuodocode
+--[[
+
+PosSizeArchetype = {
+	signature: 
+	componentArrays: vector = {},
+	
+}
+
+local Archetype = {
+	Signature = 0,
+	Streams: [#[CompCount]#]pointer,
+}
+
+local A1 = #[GetArchetypeType(Position, Size)]#
+local A2 = #[GetArchetypeType(Position, Size, Gravity)]#
+
+local TestArch1: A1 = A1{data}
+
+local 
+
+##Archetype.value.name
+
+## function Archetype(...: varargs)
+    local Archetype = @record{
+        Signature: int64,
+        Streams: []vectorT{
+            ##for i = 1, #... do
+                vectorT
+            ##end
+        },
+    }
+## end
+
+
+]]
+
+

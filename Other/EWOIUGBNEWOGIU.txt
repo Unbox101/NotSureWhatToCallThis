@@ -1,0 +1,76 @@
+
+local hunger = 1
+
+
+
+gameLoop(delta){
+	
+	A
+	
+	ApplyGravity()
+	DoCollision()
+	
+	
+	
+	hunger--;
+	
+	checkEat()
+	
+	checkStarve()
+	
+}
+
+
+
+
+
+int A(int a) { return a * a; }
+int B(int b) { return b / 2; }
+int C(int c) { return c + 1; }
+
+int h[] = {2,2,2,2,2,2};
+
+void X() { h[i] = h[i] * h[i]; }
+void Y() { h = h / 2; }
+void Z() { h = h + 1; }
+
+
+int ABC(int a)
+{
+    int g = 1;
+    int h = B(a);
+    print(h);
+    
+    h = C(h);
+    print(h);
+    
+    b = A(C(B(g)));
+    h = A(C(B(h)));
+    c = D(A(C((h)));
+}
+
+
+
+void GameLoop()
+{
+
+    int g = 1;
+    A(g)
+    
+    
+    X();
+    print(h);
+    Y();
+    print(h);
+    Z();
+    
+}
+
+ABC(2)
+
+step1 = 2*2 = 4
+step2 = 4/2 = 2
+step3 = 2+1 = 3 <- output I want
+
+actual_output = 5
+

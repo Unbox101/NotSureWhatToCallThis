@@ -1,19 +1,55 @@
 ##pragmas.nogc = true
 ##cflags '-Ofast'
 
+
+require "src/Niceties"
 require("src/Components")
-require "src/ECS"
+require("src/Globals")
 
 
+local testEnt = CreateEntity()
 
---[=[]]
-local fortnite = "amoddue"
+print(testEnt.index)
 
-local Position = @record{
-	x: float32,
-	y: float32,
-	z: float32,
+testEnt = CreateEntity()
+
+print(testEnt.index)
+
+##Query({"C1", "C2", "C3"})
+##Query({"C10", "C9", "C8"})
+
+##AddComponents(entity1, {"C9", "C5", "C4"})
+
+##RemoveComponents(entity1, {"C10","C1","C2"})
+##RemoveComponents(entity1, {"C9"})
+
+--[[
+
+local Entity = @record{
+	index: int,
+	version: int
 }
-]=]
 
---local arch1: Position = {x = 1, y = 1, z = 1}
+local EntityInfo = @record{
+	ArchetypeIndex: int,
+	ChunkIndex: int,
+	Index: int,
+}
+
+local Archetype = {
+	PositionOffset = 0,
+	SizeOffset = 31310,
+	
+	BigBuffer = Void*
+}
+]]
+--FUTURE UNIT TEST or something idk
+--[[
+
+local entity1 = CreateEntity()
+
+
+
+
+
+]]

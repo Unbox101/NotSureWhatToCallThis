@@ -1,16 +1,154 @@
-##[[
-local readFile = io.open("src/Components.nelua")
+##[=====[
+require "lfs"
+local currDir = lfs.currentdir();
+currDir = currDir.."/src"
 
-local writeFile = io.open("src/Gen_ComponentInfo.nelua", "w")
-writeFile:write("--THIS FILE IS GENERATED")
+function magiclines(s)
+    if s:sub(-1)~="\n" then s=s.."\n" end
+    return s:gmatch("(.-)\n")
+end
 
-local content = readFile:read("*all") readFile:close()
+local function RecurseGetAllFiles(path, tableOut)
+    for dir in lfs.dir(path) do
+        
+        if dir:find(".nelua") then
+            print(path.."/"..dir)
+            if dir ~= "Preprocess.nelua" and dir ~= "ECS.nelua" then
+                table.insert(tableOut, path.."/"..dir)
+            end
+        elseif dir ~= "." and dir ~= ".." then
+            RecurseGetAllFiles(path.."/"..dir, tableOut)
+        end
+        
+    end
+end
 
-local AllComponentNames = {}
+local allFiles = {}
+RecurseGetAllFiles(currDir, allFiles)
 
---TODO Get all component names from Components.nelua
---put those names in a list
---
 
-writeFile:close()
-]]
+local function MergeArrays(a,b)
+    local newTable = {}
+    for i,v in ipairs(a) do
+        table.insert(newTable, v)
+    end
+    for i,v in ipairs(b) do
+        table.insert(newTable, v)
+    end
+    return newTable
+end
+
+
+function FinalizeECS()
+    print("-----------Query Archetypes-----------------")
+    for _,compTable in ipairs(AllUses.Query) do
+        print(_ToSig(compTable))
+        RegisterArchetype(compTable)
+    end
+    print("------------Additive Archetypes--------------")
+    --[=[
+    local ArchetypesToConstruct = {}
+    for _,compTable in ipairs(AllUses.Add) do
+        for _, compType in ipairs(compTable) do
+            for _, existingCompTable in ipairs(ArchetypeComponents) do
+                local tableInProgress = {compType}
+                for _, existingCompType in ipairs(existingCompTable) do
+                    table.insert(tableInProgress, existingCompType)
+                end
+                table.insert(ArchetypesToConstruct, tableInProgress)
+            end
+        end
+    end
+    ]=]
+    
+    local ArchetypesToConstruct = {}
+    for _,compTable in ipairs(AllUses.Add) do
+        for _, existingCompTable in ipairs(ArchetypeComponents) do
+            table.insert(ArchetypesToConstruct, MergeArrays(compTable, existingCompTable))
+        end
+    end
+    for _,compTable in ipairs(ArchetypesToConstruct) do
+        print(_ToSig(compTable))
+        RegisterArchetype(compTable)
+    end
+    
+    
+    print("------------Subtractive Archetypes--------------")
+    ArchetypesToConstruct = {}
+    for _,compTable in ipairs(AllUses.Remove) do
+        for _, compType in ipairs(compTable) do
+            for _, existingCompTable in ipairs(ArchetypeComponents) do
+                local tableInProgress = {}
+                for _, existingCompType in ipairs(existingCompTable) do
+                    if existingCompType ~= compType then
+                        table.insert(tableInProgress, existingCompType)
+                    end
+                end
+                table.insert(ArchetypesToConstruct, tableInProgress)
+            end
+        end
+    end
+    for _,compTable in ipairs(ArchetypesToConstruct) do
+        print(_ToSig(compTable))
+        RegisterArchetype(compTable)
+    end
+    print("-------------All Archetypes----------------")
+    local count = 0
+    for i,v in pairs(ArchetypeDictionary) do
+        count = count + 1
+        print(i,v)
+    end
+    print("TOTAL ARCHETYPES = ", count)
+end
+
+
+_G.Add = function(_, compTable)
+    table.insert(AllUses.Add, compTable)
+    return compTable
+end
+
+_G.Remove = function(_, compTable)
+    table.insert(AllUses.Remove, compTable)
+end
+
+_G.Queryy = function(compTable)
+    table.insert(AllUses.Query, compTable)
+end
+
+for _,path in ipairs(allFiles) do
+    local file = io.open(path, "r")
+    local content = file:read("*all")
+    file:close()
+    
+    
+    local commenting = 0
+    
+    for line in magiclines(content) do
+        
+        if commenting == 0 then
+            
+            
+            local match = string.match(line, '##AddComponents%((.-)%)')
+            if match ~= nil then
+                print("match = ", match)
+                local swous = load("Add("..match..")")()
+                print("oh now our table,",swous)
+            end
+            match = string.match(line, '##RemoveComponents%((.-)%)')
+            if match ~= nil then
+                load("Remove("..match..")")()
+            end
+            match = string.match(line, '##Query%((.-)%)')
+            if match ~= nil then
+                load("Queryy("..match..")")()
+            end
+            
+        end
+        
+    end
+end
+
+
+
+FinalizeECS()
+]=====]

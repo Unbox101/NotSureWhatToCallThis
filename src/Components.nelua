@@ -1,27 +1,48 @@
-global Position = @record{
-	x: float32,
-	y: float32,
-	z: float32,
+global C1 = @record{
+	noj: boolean
+}
+global C2 = @record{
+	noj: boolean
+}
+global C3 = @record{
+	noj: boolean
+}
+global C4 = @record{
+	noj: boolean
+}
+global C5 = @record{
+	noj: boolean
+}
+global C6 = @record{
+	noj: boolean
+}
+global C7 = @record{
+	noj: boolean
+}
+global C8 = @record{
+	noj: boolean
+}
+global C9 = @record{
+	noj: boolean
+}
+global C10 = @record{
+	noj: boolean
 }
 
-global Size = @record{
-	x: float32,
-	y: float32,
-	z: float32,
-}
-
-global Gravity = @record{
-	on: boolean
-}
 
 
-##[[--Auto get the sizes of all the structs in this file
+##[[--Auto get the sizes of all the records in this file
+--WARNING: This file can ONLY contain records for this to work!
 NameToI = {}
 SizeOfs = {}
-local CompCount = #Position.scope.children[3].children[1].node
+
+CompCount = #C1.scope.children[2].children[1].node--This is only necessary because for some reason "#Position.scope.children[2].symbols" returns 0
 for i=1,CompCount do
-	--local comp = Position.scope.children[3].children[1].node[i]
-	StringToIndex[Position.scope.children[3].symbols[i].name] = i
-	SizeOfs[i] = Position.scope.children[3].symbols[i].value.size
+	NameToI[C1.scope.children[2].symbols[i].name] = i-1
+	SizeOfs[i] = C1.scope.children[2].symbols[i].value.size
 end
+
+
+
 ]]
+
