@@ -1,0 +1,7 @@
+##[[
+Queryy({Position, C2, C3})
+Queryy({C10, C9, C8})
+Add(entity1, {C9, C5, C4})
+Remove(entity1, {C10, Position, C2})
+Remove(entity1, {C9})
+]]
