@@ -1,29 +1,5 @@
+require "src/Globals"
 ##[[
-
-function NewSig(compTable)
-	local signature = {}
-	local ret = ""
-	for i=1,CompCount do
-		signature[i] = 0
-	end
-	
-	for _,compType in ipairs(compTable) do
-		signature[NameToI[compType.name] ] = 1
-	end
-	
-	for i,v in ipairs(signature) do
-		ret = ret..v
-	end
-	
-	return ret
-end
-
-_G.AllUses = {
-	Query = {},
-	Add = {},
-	Remove = {}
-}
-
 TOTAL_ARCHETYPES = 0
 ArchetypeDictionary = {}
 ArchetypeComponents = {}
@@ -33,7 +9,7 @@ _ToSig = function(compTable)
 	local hash = {}
 	for _,v in ipairs(compTable) do
 		if not hash[v] then
-			dedupe[#dedupe+1] = v
+			dedupe[#dedupe+1] = v.name
 			hash[v] = true
 		end
 	end
@@ -46,10 +22,12 @@ _ToSig = function(compTable)
 end
 
 function RegisterArchetype(compTable)
+	
 	local signature = _ToSig(compTable)
 	if not ArchetypeDictionary[signature] then
 		TOTAL_ARCHETYPES = TOTAL_ARCHETYPES + 1
 		ArchetypeDictionary[signature] = TOTAL_ARCHETYPES
+		
 		ArchetypeComponents[TOTAL_ARCHETYPES] = compTable
 	end
 end
@@ -68,11 +46,32 @@ end
 
 
 
+_G.AllUses = {
+    Query = {},
+    Add = {},
+    Remove = {}
+}
 
+
+Add = function(_, compTable)
+    table.insert(AllUses.Add, compTable)
+end
+
+Remove = function(_, compTable)
+    table.insert(AllUses.Remove, compTable)
+end
+
+Queryy = function(compTable)
+    table.insert(AllUses.Query, compTable)
+end
 
 ]]
-require "vector"
-require "src/Globals"
+
+
+global Archetype = @record{
+	componentCount: int,
+	componentStreams: hashmap(int, pointer)
+}
 
 global Entity = @record{
 	index: int,
@@ -80,20 +79,52 @@ global Entity = @record{
 }
 
 global EntityInfo = @record{
-	archetype: short,
-	chunk: short,
-	index: short
+	archetypeIndex: short,
+	chunkIndex: short,--REMOVE THIS! This can be calculated because we have the chunk size information to do so.
+	streamIndex: short,
+	version: int
 }
 
-global Entities: vector(Entity) = {}
+##[[
+function reerSwous()
+
+	
+end
+]]
+
+
+##reerSwous()
+--[[
+Do we really put a system in place that iterates over every single "EntityComponent" in every chunk and checks if their 
+is something that needs to be done with that in the end of frame command buffer? Or am i STILL missing something about this
+EntityInfo struct? How on earth did unity do it? How did they store an entity using only index and version?
+]]
+--[[   IMPORTANT IDEA FOR ENTITYINFO! 
+Maybe if we need to save space, you can mark an entity as static using a function called SetInStone(EntityIn).
+This function deletes that Entities EntityInfo and makes the Entity record pointing to that location useless meaning you can delete it.
+The component data is all still in all the archetypes and can even still be deleted because you have the entities info as you iterate,
+but now u just can't access an entity from outside a query in order to add or remove components from it. Now wait just a minute.
+There's something that I know im missing here and I don't know what it is, but it involves never needing to store Entity OR EntityInfo.
+]]
+require "allocators.general"
+
+global EntitiesCount: int = 0
+
+global EntityInfosCount = 0
+global EntityInfos: span(EntityInfo) = general_allocator:new(EntityInfo, 1)
+
+local function _CreateEntities()
+	--TODO:
+end
 
 global function CreateEntity(): Entity
-	local newEntity: Entity = {
-		index = #Entities,
-		version = 0
-	}
-	Entities:push(newEntity)
-	return Entities[#Entities-1]
+	local EntIndex = EntitiesCount
+	EntitiesCount = EntitiesCount + 1
+	return Entity{EntIndex, 0}
+end
+
+global function AddComponent(entityIn: Entity, component: auto)
+	##print(component.type.size)
 end
 
 --pseuodocode

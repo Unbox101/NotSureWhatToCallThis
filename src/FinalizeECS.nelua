@@ -1,0 +1,89 @@
+##[[
+local DebugThis = true
+
+DebugPrint = function(bool, ...)
+    if bool then
+       print(...) 
+    end
+end
+
+local function MergeArrays(a,b)
+    local newTable = {}
+    for i,v in ipairs(a) do
+        table.insert(newTable, v)
+    end
+    for i,v in ipairs(b) do
+        table.insert(newTable, v)
+    end
+    return newTable
+end
+
+function FinalizeECS()
+    
+    DebugPrint(DebugThis, "-----------Query Archetypes-----------------")
+    for _,compTable in ipairs(AllUses.Query) do
+        DebugPrint(DebugThis, _ToSig(compTable))
+        RegisterArchetype(compTable)
+    end
+    DebugPrint(DebugThis, "------------Additive Archetypes--------------")
+    --[=[
+    local ArchetypesToConstruct = {}
+    for _,compTable in ipairs(AllUses.Add) do
+        for _, compType in ipairs(compTable) do
+            for _, existingCompTable in ipairs(ArchetypeComponents) do
+                local tableInProgress = {compType}
+                for _, existingCompType in ipairs(existingCompTable) do
+                    table.insert(tableInProgress, existingCompType)
+                end
+                table.insert(ArchetypesToConstruct, tableInProgress)
+            end
+        end
+    end
+    ]=]
+    
+    local ArchetypesToConstruct = {}
+    for _,compTable in ipairs(AllUses.Add) do
+        for _, existingCompTable in ipairs(ArchetypeComponents) do
+            table.insert(ArchetypesToConstruct, MergeArrays(compTable, existingCompTable))
+        end
+    end
+    for _,compTable in ipairs(ArchetypesToConstruct) do
+        DebugPrint(DebugThis, _ToSig(compTable))
+        RegisterArchetype(compTable)
+    end
+    
+    
+    DebugPrint(DebugThis, "------------Subtractive Archetypes--------------")
+    ArchetypesToConstruct = {}
+    for _,compTable in ipairs(AllUses.Remove) do
+        for _, compType in ipairs(compTable) do
+            for _, existingCompTable in ipairs(ArchetypeComponents) do
+                local tableInProgress = {}
+                for _, existingCompType in ipairs(existingCompTable) do
+                    if existingCompType ~= compType then
+                        table.insert(tableInProgress, existingCompType)
+                    end
+                end
+                table.insert(ArchetypesToConstruct, tableInProgress)
+            end
+        end
+    end
+    for _,compTable in ipairs(ArchetypesToConstruct) do
+        DebugPrint(DebugThis, _ToSig(compTable))
+        RegisterArchetype(compTable)
+    end
+    DebugPrint(DebugThis, "-------------All Archetypes----------------")
+    local count = 0
+    for i,v in pairs(ArchetypeDictionary) do
+        count = count + 1
+        DebugPrint(DebugThis, i,v)
+    end
+    DebugPrint(DebugThis, "TOTAL ARCHETYPES = ", count)
+end
+
+
+
+
+
+FinalizeECS()
+]]

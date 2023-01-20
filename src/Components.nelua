@@ -1,5 +1,7 @@
-global C1 = @record{
-	noj: boolean
+global Position = @record{
+	x: float32,
+	y: float32,
+	z: float32
 }
 global C2 = @record{
 	noj: boolean
@@ -36,10 +38,10 @@ global C10 = @record{
 NameToI = {}
 SizeOfs = {}
 
-CompCount = #C1.scope.children[2].children[1].node--This is only necessary because for some reason "#Position.scope.children[2].symbols" returns 0
+CompCount = #Position.scope.children[2].children[1].node--This is only necessary because for some reason "#Position.scope.children[2].symbols" returns 0
 for i=1,CompCount do
-	NameToI[C1.scope.children[2].symbols[i].name] = i-1
-	SizeOfs[i] = C1.scope.children[2].symbols[i].value.size
+	NameToI[Position.scope.children[2].symbols[i].name] = i-1
+	SizeOfs[i] = Position.scope.children[2].symbols[i].value.size
 end
 
 

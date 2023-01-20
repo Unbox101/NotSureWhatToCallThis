@@ -1,27 +1,39 @@
-##pragmas.nogc = true
-##cflags '-Ofast'
 
 
-require "src/Niceties"
+##[[
+pragmas.nogc = true
+cflags '-Ofast'
+Release = false
+if Release then
+	pragmas.nochecks = true
+end
+]]
+
+
+
+
 require("src/Components")
 require("src/Globals")
 
+local TestEntity = CreateEntity()
 
-local testEnt = CreateEntity()
 
-print(testEnt.index)
+local TestEntity1 = CreateEntity()
 
-testEnt = CreateEntity()
 
-print(testEnt.index)
+AddComponent(TestEntity, Position{x=0,y=0,z=0})
 
-##Query({"C1", "C2", "C3"})
-##Query({"C10", "C9", "C8"})
+##Query({Position, C2, C3})
+##Query({C10, C9, C8})
 
-##AddComponents(entity1, {"C9", "C5", "C4"})
+##AddComponents(entity1, {C9, C5, C4})
 
-##RemoveComponents(entity1, {"C10","C1","C2"})
-##RemoveComponents(entity1, {"C9"})
+##RemoveComponents(entity1, {C10, Position, C2})
+##RemoveComponents(entity1, {C9})
+
+
+
+
 
 --[[
 

@@ -16,6 +16,7 @@ PosSizeGravity.entityCapacity = math.floor(ChunkSize / PosSizeGravity.size)
 --print(PosSizeGravity.entityCapacity)
 
 
+
 --[[
 
 ---Current options for compile time---:
